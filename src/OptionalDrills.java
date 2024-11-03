@@ -13,7 +13,10 @@ public class OptionalDrills {
      * @param menu - the list of dishes to look through
      */
     public static void printOutExampleVegetarianDish(List<Dish> menu) {
-        throw new UnsupportedOperationException();
+        menu.stream()
+                .filter(Dish::isVegetarian) // Filter for vegetarian dishes
+                .findFirst() // Get the first vegetarian dish, if any
+                .ifPresent(dish -> System.out.println(dish.getName())); // Print the name if present
     }
 
     /**
@@ -22,7 +25,8 @@ public class OptionalDrills {
      * @return the name of the dish if it exists
      */
     public static Optional<String> getDishName(Dish dish) {
-        throw new UnsupportedOperationException();
+        return Optional.ofNullable(dish) // Handle potential null Dish
+                .map(Dish::getName); // Map to the name if Dish is present
     }
 
     /**
@@ -31,8 +35,11 @@ public class OptionalDrills {
      * @return The name of the insurance if it exists
      */
     public static Optional<String> getExistingInsuranceName(Car car) {
-        throw new UnsupportedOperationException();
+        return Optional.ofNullable(car)
+                .map(Car::getInsurance) // Get the Insurance object, which might be null
+                .map(insurance -> insurance != null ? insurance.get().getName() : null); // Map to the name if Insurance is not null
     }
+
 
     /**
      * Use the private 'otherService' method below to find the name of the
@@ -41,7 +48,9 @@ public class OptionalDrills {
      * @return the name of the cheapest insurance if it exists
      */
     public static Optional<String> findCheapestInsuranceName(Car car) {
-        throw new UnsupportedOperationException();
+        return Optional.ofNullable(car) // Handle potential null Car
+                .flatMap(c -> Optional.ofNullable(otherService(c))) // Get Insurance using otherService, handle null
+                .map(Insurance::getName); // Map to the name if Insurance is present
     }
 
     /**
@@ -52,8 +61,10 @@ public class OptionalDrills {
      * @return the name of the car's cheapest insurance if it and the car exist
      */
     public static Optional<String> findCheapestInsuranceName(Optional<Car> car) {
-        throw new UnsupportedOperationException();
+        return car.map(OptionalDrills::safeOtherService) // Call safeOtherService
+                .map(Insurance::getName); // Map to the name if Insurance is present
     }
+
 
     /**
      * Tries to find the cheapest insurance, may be null.
